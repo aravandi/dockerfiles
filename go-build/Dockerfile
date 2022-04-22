@@ -1,16 +1,16 @@
 FROM hairyhenderson/gomplate:v3.10.0-slim AS gomplate
-FROM docker:20.10.12 AS docker
+FROM docker:20.10.14 AS docker
 FROM docker/compose:1.29.2 AS compose
-FROM vault:1.9.3 AS vault
-FROM hashicorp/terraform:1.1.5 AS terraform
-FROM hashicorp/packer:1.7.10 AS packer
-FROM prom/prometheus:v2.33.1 AS prometheus
-FROM prom/alertmanager:v0.23.0 AS alertmanager
-FROM mikefarah/yq:4.18.1 AS yq
-FROM lachlanevenson/k8s-kubectl:v1.21.9 AS kubectl
+FROM vault:1.10.0 AS vault
+FROM hashicorp/terraform:1.1.9 AS terraform
+FROM hashicorp/packer:1.8.0 AS packer
+FROM prom/prometheus:v2.35.0 AS prometheus
+FROM prom/alertmanager:v0.24.0 AS alertmanager
+FROM mikefarah/yq:4.24.5 AS yq
+FROM lachlanevenson/k8s-kubectl:v1.23.4 AS kubectl
 FROM lachlanevenson/k8s-helm:v2.17.0 AS helm2
-FROM lachlanevenson/k8s-helm:v3.8.0 AS helm
-FROM golangci/golangci-lint:v1.44.0-alpine AS golangci-lint
+FROM lachlanevenson/k8s-helm:v3.8.1 AS helm
+FROM golangci/golangci-lint:v1.45.2-alpine AS golangci-lint
 
 FROM alpine:3.15 AS cc-test-reporter
 
@@ -52,7 +52,7 @@ RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC/g
   && ln -s /lib/libc.musl-x86_64.so.1 /usr/glibc-compat/lib \
   && ln -s /usr/lib/libgcc_s.so.1 /usr/glibc-compat/lib
 
-FROM golang:1.17.6-alpine AS build
+FROM golang:1.18.1-alpine AS build
 
 COPY --from=gomplate /gomplate /bin/gomplate
 COPY --from=docker /usr/local/bin/docker /bin/docker
